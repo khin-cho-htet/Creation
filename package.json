@@ -1,0 +1,9 @@
+{
+  "name": "khin-cho-htet-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Creative Node.js portfolio for Khin Cho Htet",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
