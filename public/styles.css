@@ -30,6 +30,19 @@ body {
   overflow-x: hidden;
 }
 
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(120deg, rgba(255, 143, 90, 0.05), transparent 35%),
+    linear-gradient(300deg, rgba(244, 201, 93, 0.04), transparent 40%);
+  background-size: 160% 160%;
+  pointer-events: none;
+  z-index: -2;
+  animation: shimmerField 14s ease-in-out infinite;
+}
+
 img {
   display: block;
   max-width: 100%;
@@ -43,6 +56,17 @@ a {
 .page-shell {
   position: relative;
   isolation: isolate;
+}
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: var(--scroll-progress, 0%);
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 20px rgba(255, 143, 90, 0.5);
+  z-index: 40;
 }
 
 .ambient {
@@ -61,6 +85,7 @@ a {
   top: 6rem;
   right: -8rem;
   background: rgba(255, 143, 90, 0.35);
+  animation-duration: 12s;
 }
 
 .ambient-two {
@@ -68,6 +93,7 @@ a {
   left: -6rem;
   background: rgba(244, 201, 93, 0.24);
   animation-delay: -9s;
+  animation-duration: 15s;
 }
 
 .topbar {
@@ -126,6 +152,10 @@ a {
   transform: translateY(-2px) scale(1.01);
 }
 
+.button:not(.button-ghost) {
+  animation: pulseGlow 2.8s ease-in-out infinite;
+}
+
 .button-ghost {
   background: transparent;
   border-color: rgba(255, 255, 255, 0.14);
@@ -136,16 +166,16 @@ a {
 .section {
   width: min(1180px, calc(100% - 2.4rem));
   margin: 0 auto;
-  padding: 4rem 0;
+  padding: 3rem 0;
 }
 
 .hero {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   align-items: center;
-  gap: 3rem;
-  min-height: calc(100vh - 5rem);
-  padding-top: 3rem;
+  gap: 2rem;
+  min-height: calc(100vh - 7rem);
+  padding-top: 1.25rem;
 }
 
 .eyebrow {
@@ -164,23 +194,23 @@ a {
 }
 
 .hero h1 {
-  font-size: clamp(3.2rem, 9vw, 6.6rem);
-  max-width: 12ch;
+  font-size: clamp(2.6rem, 6.8vw, 5rem);
+  max-width: 10ch;
 }
 
 .lead,
 .panel p,
 .contact-card p {
   color: var(--muted);
-  font-size: 1.04rem;
-  line-height: 1.8;
+  font-size: 1rem;
+  line-height: 1.7;
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  margin: 2rem 0;
+  margin: 1.35rem 0;
 }
 
 .hero-stats {
@@ -201,7 +231,7 @@ a {
 
 .hero-stats article {
   border-radius: 1.5rem;
-  padding: 1.2rem;
+  padding: 1rem;
 }
 
 .hero-stats strong {
@@ -224,13 +254,14 @@ a {
 
 .portrait-card {
   position: relative;
-  width: min(100%, 480px);
-  padding: 1.1rem;
+  width: min(100%, 420px);
+  padding: 0.9rem;
   border-radius: 2.2rem;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
   border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow: var(--shadow);
   transform-style: preserve-3d;
+  animation: heroFloat 6s ease-in-out infinite;
 }
 
 .portrait-card img {
@@ -256,7 +287,7 @@ a {
   background: rgba(12, 11, 16, 0.78);
   border: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(18px);
-  animation: bob 5s ease-in-out infinite;
+  animation: bob 3.4s ease-in-out infinite;
 }
 
 .floating-note span {
@@ -294,7 +325,7 @@ a {
   width: max-content;
   gap: 1rem;
   padding: 1rem 0;
-  animation: marquee 24s linear infinite;
+  animation: marquee 16s linear infinite;
 }
 
 .marquee-track span {
@@ -371,6 +402,27 @@ a {
 .timeline-card {
   border-radius: 1.8rem;
   padding: 1.8rem;
+  transition: transform 240ms ease, border-color 240ms ease, box-shadow 240ms ease;
+}
+
+.panel,
+.hero-stats article,
+.contact-links a,
+.domain-grid article {
+  transition: transform 240ms ease, border-color 240ms ease, background 240ms ease;
+}
+
+.panel:hover,
+.timeline-card:hover,
+.hero-stats article:hover,
+.contact-links a:hover,
+.domain-grid article:hover {
+  transform: translateY(-8px);
+  border-color: rgba(255, 143, 90, 0.28);
+}
+
+.hero-stats article:hover {
+  background: rgba(255, 255, 255, 0.09);
 }
 
 .timeline-card h3 {
@@ -445,13 +497,15 @@ a {
 
 .reveal {
   opacity: 0;
-  transform: translateY(34px) scale(0.98);
-  transition: opacity 700ms ease, transform 700ms ease;
+  transform: translateY(46px) scale(0.94);
+  filter: blur(10px);
+  transition: opacity 850ms ease, transform 850ms ease, filter 850ms ease;
 }
 
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0) scale(1);
+  filter: blur(0);
 }
 
 @keyframes drift {
@@ -468,7 +522,7 @@ a {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-12px);
+    transform: translateY(-18px);
   }
 }
 
@@ -481,6 +535,33 @@ a {
   }
 }
 
+@keyframes heroFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 10px 30px rgba(255, 143, 90, 0.28);
+  }
+  50% {
+    box-shadow: 0 16px 42px rgba(255, 143, 90, 0.45);
+  }
+}
+
+@keyframes shimmerField {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
 @media (max-width: 1024px) {
   .hero,
   .grid-two,
@@ -489,7 +570,8 @@ a {
   }
 
   .hero {
-    padding-top: 1rem;
+    min-height: auto;
+    padding-top: 0.5rem;
   }
 
   .hero h1 {
@@ -526,6 +608,7 @@ a {
 
   .portrait-card {
     padding-bottom: 1.4rem;
+    animation: none;
   }
 
   .floating-note {

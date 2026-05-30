@@ -1,5 +1,6 @@
 const reveals = document.querySelectorAll(".reveal");
 const portraitCard = document.querySelector(".portrait-card");
+const progressBar = document.querySelector(".scroll-progress");
 
 const observer = new IntersectionObserver(
   (entries) => {
@@ -13,7 +14,23 @@ const observer = new IntersectionObserver(
   { threshold: 0.14 }
 );
 
-reveals.forEach((item) => observer.observe(item));
+reveals.forEach((item, index) => {
+  item.style.transitionDelay = `${Math.min(index * 70, 420)}ms`;
+  observer.observe(item);
+});
+
+function updateScrollProgress() {
+  if (!progressBar) {
+    return;
+  }
+
+  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+  document.documentElement.style.setProperty("--scroll-progress", `${progress}%`);
+}
+
+updateScrollProgress();
+window.addEventListener("scroll", updateScrollProgress, { passive: true });
 
 window.addEventListener("pointermove", (event) => {
   if (!portraitCard || window.innerWidth < 821) {
